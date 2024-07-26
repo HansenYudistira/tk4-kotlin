@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "998083380587",
+    "project_id": "tugas-kelompok-4-3f004",
+    "storage_bucket": "tugas-kelompok-4-3f004.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:998083380587:android:54949b65689a7900d1f82e",
+        "android_client_info": {
+          "package_name": "com.example.tk3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "998083380587-a10lopf7j36c4nujfvm4nc3krbdufs5u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tk3",
+            "certificate_hash": "0fbe2f57f43c0a5e3148b6984143697e95119876"
+          }
+        },
+        {
+          "client_id": "998083380587-2k1ngg288lgjmpjrs7lnaadkebud78u9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBywPYFXs1q-mC73BQ90gAG2vIx0GRSEUY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "998083380587-2k1ngg288lgjmpjrs7lnaadkebud78u9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
