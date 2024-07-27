@@ -1,6 +1,7 @@
 package com.example.tk3.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,10 +10,15 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tk3.MapsActivity
 import com.example.tk3.R
+import com.example.tk3.database.DatabaseHelper
 import com.example.tk3.model.DestinationListModel
 
-class DestinationListAdapter(private val destinationList: List<DestinationListModel>, private val context: Context)
+class DestinationListAdapter(
+    private val destinationList: MutableList<DestinationListModel>,
+    private val context: Context)
     : RecyclerView.Adapter<DestinationListAdapter.DestinationViewHolder>() {
+
+    private val dbHelper = DatabaseHelper(context)
 
     inner class DestinationViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val name: TextView = view.findViewById(R.id.txt_name)
@@ -43,5 +49,25 @@ class DestinationListAdapter(private val destinationList: List<DestinationListMo
 
     override fun getItemCount(): Int {
         return destinationList.size
+    }
+
+    fun removeItemById(destinationId: String) {
+        if (destinationId.isBlank()) {
+            Log.e("DestinationListAdapter", "Cannot remove item with blank ID.")
+            return
+        }
+
+        val position = destinationList.indexOfFirst { it.id == destinationId }
+        if (position != -1) {
+            dbHelper.deleteDestination(destinationId).addOnSuccessListener {
+                destinationList.removeAt(position)
+                notifyItemRemoved(position)
+            }.addOnFailureListener { e ->
+                // Handle any errors here, like showing a message to the user
+                e.printStackTrace()
+            }
+        } else {
+            Log.d("DestinationListAdapter", "Destination ID not found: $destinationId")
+        }
     }
 }

@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.tk3.adapter.DestinationListAdapter
 import com.example.tk3.database.DatabaseHelper
 import com.example.tk3.databinding.ActivityMainBinding
@@ -26,7 +28,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var binding: ActivityMainBinding
     private lateinit var destinationListAdapter: DestinationListAdapter
-    private var destinationList: List<DestinationListModel> = ArrayList()
+    private var destinationList: MutableList<DestinationListModel> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,14 +77,31 @@ class MainActivity : AppCompatActivity() {
     private fun fetchList() {
         firestore.collection("destinations").get()
             .addOnSuccessListener { result ->
-                destinationList = result.toObjects(DestinationListModel::class.java)
+                destinationList = result.toObjects(DestinationListModel::class.java).toMutableList()
                 destinationListAdapter = DestinationListAdapter(destinationList, this@MainActivity)
                 binding.rvList.layoutManager = LinearLayoutManager(this@MainActivity)
                 binding.rvList.adapter = destinationListAdapter
+
+                val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+                    override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                        return false
+                    }
+
+                    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                        val position = viewHolder.adapterPosition
+                        val destinationId = destinationList[position].id
+                        destinationListAdapter.removeItemById(destinationId)
+                    }
+                }
+
+                val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+                itemTouchHelper.attachToRecyclerView(binding.rvList)
+
                 destinationListAdapter.notifyDataSetChanged()
             }
             .addOnFailureListener { exception ->
                 // Handle any errors here
+                exception.printStackTrace()
             }
     }
 

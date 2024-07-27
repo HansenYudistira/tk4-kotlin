@@ -31,6 +31,9 @@ class DatabaseHelper(private val context: Context) {
     }
 
     fun deleteDestination(id: String): Task<Void> {
+        if (id.isBlank()) {
+            throw IllegalArgumentException("Invalid document reference. Document references must have a valid ID.")
+        }
         return firestore.collection(collectionName).document(id).delete()
     }
 }
